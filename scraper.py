@@ -13,29 +13,34 @@ import smtplib
 # Import regular expressions
 import re 
 
-import urllib2
+import urllib.request
 
 import sys
 
-from email.MIMEMultipart import MIMEMultipart
-
-from email.MIMEText import MIMEText
+import email
 
 #-----------------------------------------------------------
 
-#scrape the page
-url = "https://deckbox.org/sets/1684027"
+#get all the relevant links
+deck_url = input('Enter the Deckbox text export link: ')
+commander_link = input('Enter the EDHRec commander page link: ')
+inventory_link = input('Enter your Deckbox collection link: ')
+
+#scrape the pages
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-response = requests.get(url, headers=headers)
+deck_response = requests.get(deck_url, headers=headers)
+inventory_response = requests.get(inventory_link, headers=headers)
+
 
 #parse the HTML
-soup = BeautifulSoup(response.text, "html.parser")
+deck_soup = BeautifulSoup(deck_response.text, "html.parser")
+inventory_soup = BeautifulSoup(inventory_response.text, "html.parser")
 
 #create an empty list
-deck = []
+deck = deck_soup.body.contents
+
+#delete the br/ tags from teh soup
+del deck[1::2]
 
 #iterate through the parsed HTML and extract dates
-for item in soup.find_all(attrs={'a class': 'target'}):
-	deck.append(item.string)
-
-print deck
+print (*deck, sep='\n')
