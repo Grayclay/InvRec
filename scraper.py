@@ -22,13 +22,9 @@ import email
 #-----------------------------------------------------------
 
 #get all the relevant links
-#deck_url = input('Enter the Deckbox text export link: ')
-#commander_link = input('Enter the EDHRec commander page link: ')
-#inventory_link = input('Enter your Deckbox collection link: ')
-
-deck_url = "https://deckbox.org/sets/1775057/export"
-commander_link = "https://edhrec.com/commanders/sidisi-brood-tyrant"
-inventory_link = "https://deckbox.org/sets/262380/export?s=&f=&o="
+deck_url = input('Enter the Deckbox text export link: ')
+commander_link = input('Enter the EDHRec commander page link: ')
+inventory_link = input('Enter your Deckbox collection link: ')
 
 
 #scrape the pages
@@ -57,6 +53,7 @@ del inventory[1::2]
 deck = [e[2:] for e in deck]
 inventory = [e[2:] for e in inventory]
 
+#cuts out the annoying leading white space from the deckbox text export's first row
 deck[0] = deck[0].replace("       1 ","")
 inventory[0] = inventory[0].replace("       1 ","")
 
@@ -71,6 +68,7 @@ for tag in commander:
 	
 potentials = []	
 
+#adds cards to potentials that are cards EDHREC suggests and that you own
 for card in inventory:
 	if card in comm_clean:
 		potentials.append(card)
@@ -79,12 +77,15 @@ for card in inventory:
 
 recos = []
 		
+#filters out potentials based on cards that are already in the deck
 for card in potentials:
 	if card not in deck:
 		recos.append(card)
 	else:
 		continue
 		
+#removes duplicates
 recos = set(recos)
 
+#prints the output
 print ('[%s]' % '\n'.join(map(str, recos)))
