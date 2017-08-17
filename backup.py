@@ -69,22 +69,8 @@ comm_clean = []
 for tag in commander:
 	comm_clean.append(tag.text.strip())
 	
-potentials = []	
-
 for card in inventory:
-	if card in comm_clean:
-		potentials.append(card)
+	for card in commander:
+		print(card)
 	else:
 		continue
-
-recos = []
-		
-for card in potentials:
-	if card not in deck:
-		recos.append(card)
-	else:
-		continue
-		
-recos = set(recos)
-
-print ('[%s]' % '\n'.join(map(str, recos)))
